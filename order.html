@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurant Website</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function () {
+      emailjs.init("MHPAo3-0NGv208r_l"); // ✅ Use your actual public key here
+    })();
+  </script>
+</head>
+<body>
+  <!-- Navbar -->
+  <section class="navbar">
+    <div class="container">
+      <div class="logo">
+        <a href="#"><img src="img/logo.png" alt="Logo" class="img-responsive" /></a>
+      </div>
+      <div class="menu text-right">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="categories.html">Categories</a></li>
+          <li><a href="category-foods.html">Foods</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Order Form -->
+  <section class="food-search">
+    <div class="container">
+      <h2 class="text-center text-white">Fill this form to confirm your order.</h2>
+
+      <form id="orderForm">
+        <fieldset>
+          <legend>Selected Food</legend>
+          <div class="food-menu-img">
+            <img id="food-img" src="img/default.jpg" alt="Selected Food" class="img-responsive img-curve" />
+          </div>
+          <div class="food-menu-desc">
+            <h3 id="food-name">Loading...</h3>
+            <p class="food-price">$<span id="food-price">0.00</span></p>
+
+            <input type="hidden" name="food" id="foodInput" />
+            <input type="hidden" name="price" id="priceInput" />
+
+            <div class="order-label">Quantity</div>
+            <input type="number" name="quantity" class="input-responsive" value="1" required />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Delivery Details</legend>
+          <div class="order-label">Full Name</div>
+          <input type="text" name="full_name" placeholder="E.g. Rahul Singh" class="input-responsive" required />
+
+          <div class="order-label">Phone</div>
+          <input type="tel" name="phone" placeholder="E.g. 9876543210" class="input-responsive" required />
+
+          <div class="order-label">Email</div>
+          <input type="email" name="email" placeholder="E.g. rahul@example.com" class="input-responsive" required />
+
+          <div class="order-label">Address</div>
+          <textarea name="address" placeholder="E.g. Street, City, Country" class="input-responsive" rows="4" required></textarea>
+
+          <input type="submit" class="btn btn-primary" value="Confirm Order" />
+        </fieldset>
+      </form>
+    </div>
+  </section>
+
+  <!-- JavaScript to populate data -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const food = params.get("food") || "Unknown Food";
+    const price = params.get("price") || "0.00";
+    const img = params.get("img") || "img/default.jpg"; // fallback image path
+
+    // ✅ Fixed image loading logic
+    document.getElementById("food-img").src = img;
+    document.getElementById("food-name").textContent = food;
+    document.getElementById("food-price").textContent = price;
+    document.getElementById("foodInput").value = food;
+    document.getElementById("priceInput").value = price;
+
+    document.getElementById("orderForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      emailjs.sendForm(
+        'service_ggrpnt9',    // ✅ Your EmailJS service ID
+        'template_8h34cnk',   // ✅ Your EmailJS template ID
+        this
+      ).then(
+        () => {
+          alert("✅ Order placed successfully! Email sent.");
+          document.getElementById("orderForm").reset();
+        },
+        (error) => {
+          console.error("❌ Email send failed:", error);
+          alert("❌ Failed to send email. Try again.");
+        }
+      );
+    });
+  </script>
+</body>
+</html>
+
